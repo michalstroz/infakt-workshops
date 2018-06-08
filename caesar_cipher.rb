@@ -2,8 +2,7 @@ class CaesarCipher
   def initialize(str, n=13)
     @str = str
     @n = n
-    @miniscules = Array('a'..'z')
-    @majuscules = Array('A'..'Z')
+
   end
 
   def perform
@@ -13,6 +12,12 @@ class CaesarCipher
   private
 
   def maj_min_hash
-    Hash[@miniscules.zip(@miniscules.rotate(@n))].merge(Hash[@majuscules.zip(@majuscules.rotate(@n))])
+    rotate_miniscules = rotate_for(('a'..'z').to_a)
+    rotate_majuscules = rotate_for(('A'..'Z').to_a)
+    Hash[rotate_miniscules].merge(Hash[rotate_majuscules])
+  end
+
+  def rotate_for(data)
+    data.zip(data.rotate(@n))
   end
 end

@@ -1,21 +1,16 @@
 class PassedOrFailed
   def initialize(hash, threshold)
-    @hash = hash.inject({}){ |h, (k, v)| h[k] = v.to_i; h}
+    @hash = hash.transform_values(&:to_i)
     @threshold = threshold.to_i
   end
 
   def perform
-    create_hash
+    { passed: group_students[:passed].to_h, failed: group_students[:failed].to_h }
   end
 
   private
 
-  def group_studends
-    @hash.group_by{ |k, v| v >= @threshold ? :passed  : :failed }
-  end
-
-  def create_hash
-    group = group_studends
-    { passed: group[:passed].to_h, failed: group[:failed].to_h }
+  def group_students
+    @group_students ||= @hash.group_by{ |_, v| v >= @threshold ? :passed  : :failed }
   end
 end
